@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9288770962100185"
+    crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="naver-site-verification" content="b366dbb6459aafa1c91f8f26b783724b86199d71" />
+  <meta name="description" content="Generate secure HMAC-SHA256 hashes with our free online HMAC generator tool. Mobile-optimized, dark-mode interface for developers. Instantly copy or download your keys.">
+  <title>HMAC Generator - SHA256 | Developer Tool</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Fira Code', monospace;
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: #00e676;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #90caf9;
+    }
+
+    textarea, input {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.5rem;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 5px;
+      font-family: inherit;
+    }
+
+    .buttons {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 0.6rem 1.2rem;
+      background: #00bfa5;
+      border: none;
+      border-radius: 4px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #1de9b6;
+    }
+
+    #output {
+      margin-top: 1.5rem;
+      background: #212121;
+      padding: 1rem;
+      word-break: break-all;
+      border-left: 4px solid #00e676;
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>HMAC Generator (SHA-256) – Developer-Friendly Tool</h1>
+
+  <label for="message">Message</label>
+  <textarea id="message" rows="4" placeholder="Enter your message..."></textarea>
+
+  <label for="secret">Secret Key</label>
+  <input type="text" id="secret" placeholder="Enter your secret key..." />
+
+  <div class="buttons">
+    <button onclick="generateHMAC()">Generate HMAC</button>
+    <button onclick="copyOutput()">Copy</button>
+    <button onclick="saveToFile()">Save to File</button>
+  </div>
+
+  <div id="output" hidden></div>
+
+  <!-- Google AdSense Placeholder -->
+  <footer>
+    <!-- Replace this with your AdSense code -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9288770962100185"
+          crossorigin="anonymous"></script>
+          <ins class="adsbygoogle"
+              style="display:block"
+              data-ad-client="ca-pub-9288770962100185"
+              data-ad-slot="6399153707"
+              data-ad-format="auto"
+              data-full-width-responsive="true"></ins>
+          <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+  </footer>
+
+  <script>
+    async function generateHMAC() {
+      const msg = document.getElementById('message').value;
+      const secret = document.getElementById('secret').value;
+      if (!msg || !secret) {
+        alert("Please enter both message and secret.");
+        return;
+      }
+
+      const enc = new TextEncoder();
+      const key = await window.crypto.subtle.importKey(
+        "raw",
+        enc.encode(secret),
+        { name: "HMAC", hash: { name: "SHA-256" } },
+        false,
+        ["sign"]
+      );
+
+      const signature = await window.crypto.subtle.sign(
+        "HMAC",
+        key,
+        enc.encode(msg)
+      );
+
+      const hashArray = Array.from(new Uint8Array(signature));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+      const output = document.getElementById('output');
+      output.hidden = false;
+      output.textContent = hashHex;
+    }
+
+    function copyOutput() {
+      const output = document.getElementById('output');
+      if (output.hidden) return;
+      navigator.clipboard.writeText(output.textContent)
+        .then(() => alert("Copied to clipboard!"));
+    }
+
+    function saveToFile() {
+      const output = document.getElementById('output');
+      if (output.hidden) return;
+      const blob = new Blob([output.textContent], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "hmac.txt";
+      link.click();
+    }
+  </script>
+</body>
+</html>
